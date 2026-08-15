@@ -169,8 +169,6 @@ sudo apt install ffmpeg
 
 ## 🔑 API
 
-The app uses the TMDB API key: `e4787135bfa1bf143663910fa8740759`
-
 This key is included for demo purposes. For production, get your own key at:
 https://www.themoviedb.org/settings/api
 
