@@ -1,0 +1,480 @@
+@import "tailwindcss";
+
+:root {
+  --gs-red: #e50914;
+  --gs-dark: #0a0a0a;
+  --gs-card: #181818;
+  --gs-hover: #252525;
+  --gs-text: #e5e5e5;
+  --gs-muted: #808080;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0a0a0a;
+  color: #e5e5e5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Startup Animation */
+@keyframes logoGlow {
+  0% { text-shadow: 0 0 10px rgba(229,9,20,0); filter: brightness(0); transform: scale(0.8); }
+  30% { text-shadow: 0 0 60px rgba(229,9,20,0.8), 0 0 120px rgba(229,9,20,0.4); filter: brightness(1.2); transform: scale(1.05); }
+  50% { text-shadow: 0 0 80px rgba(229,9,20,1), 0 0 160px rgba(229,9,20,0.6), 0 0 200px rgba(255,50,50,0.3); filter: brightness(1.5); transform: scale(1); }
+  70% { text-shadow: 0 0 40px rgba(229,9,20,0.6), 0 0 100px rgba(229,9,20,0.3); filter: brightness(1); }
+  100% { text-shadow: 0 0 20px rgba(229,9,20,0.4); filter: brightness(1); transform: scale(1); }
+}
+
+@keyframes fadeInScale {
+  0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideRight {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
+  50% { box-shadow: 0 0 30px 5px rgba(229,9,20,0.3); }
+}
+
+@keyframes ambientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes cinematicBars {
+  0% { height: 50%; }
+  100% { height: 0%; }
+}
+
+@keyframes particleFade {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  50% { opacity: 1; transform: translateY(-50px) scale(1); }
+  100% { opacity: 0; transform: translateY(-120px) scale(0.5); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes ghostFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.startup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.startup-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.startup-logo {
+  font-size: 5rem;
+  font-weight: 900;
+  color: #e50914;
+  letter-spacing: 12px;
+  animation: logoGlow 3s ease-out forwards;
+}
+
+.startup-tagline {
+  color: #666;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  letter-spacing: 4px;
+  animation: fadeInScale 1.5s ease-out 1.5s both;
+}
+
+.cinematic-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #000;
+  z-index: 10000;
+  animation: cinematicBars 1s ease-out 3.5s forwards;
+}
+.cinematic-bar.top { top: 0; height: 0; }
+.cinematic-bar.bottom { bottom: 0; height: 0; }
+
+/* Live wallpaper background */
+.live-wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, #0a0a0a, #1a0a0a, #0a0a1a, #0a1a0a, #0a0a0a);
+  background-size: 400% 400%;
+  animation: ambientShift 20s ease infinite;
+  transition: background-image 2s ease;
+}
+
+.live-wallpaper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, #0a0a0a 70%);
+}
+
+.live-wallpaper-image {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) brightness(0.3) saturate(1.5);
+  transition: background-image 2s ease, opacity 2s ease;
+  opacity: 0;
+}
+
+.live-wallpaper-image.active {
+  opacity: 1;
+}
+
+/* Card styles */
+.gs-card {
+  background: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  position: relative;
+  transform-origin: center center;
+}
+
+.gs-card:hover,
+.gs-card:focus-visible {
+  transform: scale(1.08);
+  z-index: 20;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 30px rgba(229,9,20,0.15);
+}
+
+.gs-card:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 3px;
+}
+
+.gs-card .card-info {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.gs-card:hover .card-info,
+.gs-card:focus-visible .card-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Row styles */
+.gs-row {
+  animation: slideUp 0.6s ease-out both;
+}
+
+.gs-row-scroll {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.gs-row-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hero section */
+.hero-section {
+  position: relative;
+  min-height: 85vh;
+  overflow: hidden;
+}
+
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  transition: background-image 1s ease;
+}
+
+.hero-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 40%, transparent 70%),
+              linear-gradient(to top, #0a0a0a 0%, transparent 50%);
+}
+
+/* Button styles */
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.gs-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.gs-btn:hover::after {
+  transform: translateX(100%);
+}
+
+.gs-btn-primary {
+  background: #e50914;
+  color: white;
+}
+.gs-btn-primary:hover {
+  background: #ff1a27;
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(229,9,20,0.4);
+}
+
+.gs-btn-secondary {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+.gs-btn-secondary:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #252525 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* Search bar */
+.gs-search {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid #333;
+  color: white;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+.gs-search:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 20px rgba(229,9,20,0.2);
+  outline: none;
+}
+
+/* Navigation focus styles for TV/gamepad */
+.nav-focusable:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+  box-shadow: 0 0 20px rgba(229,9,20,0.3);
+}
+
+/* Player overlay */
+.player-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  animation: fadeInScale 0.4s ease-out;
+}
+
+.player-overlay.closing {
+  animation: fadeOut 0.4s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Progress bar */
+.progress-bar {
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 4px;
+}
+.progress-bar .fill {
+  height: 100%;
+  background: #e50914;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 900;
+  backdrop-filter: blur(8px);
+  animation: fadeInScale 0.3s ease;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 901;
+  background: #181818;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* Category tabs */
+.category-tab {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.category-tab.active {
+  background: #e50914;
+  color: white;
+}
+
+.category-tab:not(.active) {
+  background: rgba(255,255,255,0.08);
+  color: #999;
+}
+
+.category-tab:not(.active):hover {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+/* Ambient particles */
+.ambient-particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: rgba(229,9,20,0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: breathe 4s ease infinite;
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  background: #181818;
+  border: 1px solid #333;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* Nav bar */
+.gs-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background 0.3s ease;
+  padding: 16px 24px;
+}
+
+.gs-nav.scrolled {
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .startup-logo { font-size: 2.5rem; letter-spacing: 6px; }
+  .hero-section { min-height: 60vh; }
+  .gs-btn { padding: 10px 20px; font-size: 0.875rem; }
+  .modal-content { width: 98%; max-height: 95vh; }
+}
+
+@media (max-width: 480px) {
+  .startup-logo { font-size: 1.8rem; letter-spacing: 4px; }
+}
+
+/* TV-friendly large touch targets */
+@media (min-width: 1920px) {
+  .gs-card:hover, .gs-card:focus-visible {
+    transform: scale(1.12);
+  }
+  .gs-btn {
+    padding: 16px 36px;
+    font-size: 1.1rem;
+  }
+}
