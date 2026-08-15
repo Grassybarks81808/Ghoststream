@@ -1,177 +1,173 @@
 # 👻 GHOSTSTREAM
 
-**The Ultimate Streaming Experience** - A Netflix-like streaming app with epic cinematic vibes.
-
-![Ghost Logo](https://img.shields.io/badge/GHOSTSTREAM-e50914?style=for-the-badge&logo=ghost&logoColor=white)
+**The Ultimate Cinematic Streaming Experience** — A high-end, Netflix-style web application designed with epic cinematic vibes, ambient audio design, gamepad support, and local download capabilities.
 
 ---
 
-## 🚀 HOW TO RUN ON YOUR LAPTOP
+## 📦 QUICK START: DOWNLOAD THE APP
 
-### Step 1: Install Node.js (One-time)
+Don't want to mess with source code, terminal commands, or Node.js?
 
-1. Go to: **https://nodejs.org**
-2. Click the big green **"LTS"** button
-3. Install it (just click Next → Next → Install)
-4. **Restart your computer**
+1. Head over to the **[Releases](https://www.google.com/search?q=../../releases)** page.
+2. Download the pre-built installer or executable package for your operating system (**Windows**, **macOS**, or **Linux**).
+3. Run the installer and enjoy instant streaming!
 
-### Step 2: Download This Project
+---
 
-Download or extract the project folder to your Desktop.
+## 🛠️ ALTERNATIVE: RUN FROM SOURCE
 
-### Step 3: Open Terminal/Command Prompt
+If you are a developer or prefer to run the project locally via source code, follow these steps:
 
-**Windows:**
-1. Press `Win + R`, type `cmd`, press Enter
-2. Type: `cd Desktop\ghoststream` (adjust folder name)
+### Prerequisites
 
-**Mac:**
-1. Press `Cmd + Space`, type `Terminal`, press Enter  
-2. Type: `cd ~/Desktop/ghoststream`
+* **Node.js**: Version 18+ recommended (Download from [nodejs.org](https://nodejs.org)).
+* **FFmpeg**: Optional, required only if you want to use the local video download feature.
 
-### Step 4: Install & Run
+### Step-by-Step Installation
 
+1. **Clone or Download the Repository**
+Download and extract the project folder to your local machine (e.g., your Desktop).
+2. **Open Terminal / Command Prompt**
+* **Windows:** Press `Win + R`, type `cmd`, and press Enter. Then run:
+```bash
+cd Desktop\ghoststream
+
+```
+
+
+* **Mac / Linux:** Open your Terminal app and run:
+```bash
+cd ~/Desktop/ghoststream
+
+```
+
+
+
+
+3. **Install Dependencies**
 ```bash
 npm install
-```
-*(Wait 1-2 minutes)*
 
+```
+
+
+*(Please allow 1–2 minutes for packages to download.)*
+4. **Start Development Server**
 ```bash
 npm run dev
+
 ```
 
-### Step 5: Open in Browser! 🎉
 
-Go to: **http://localhost:3000**
-
----
-
-## 🎮 CONTROLS
-
-| Action | Keyboard | Controller/Remote |
-|--------|----------|-------------------|
-| Search | Press `/` or click 🔍 | Navigate to search |
-| Go Back | `Escape` or `Backspace` | Back button |
-| Navigate | Arrow keys / Tab | D-pad |
-| Select | Enter | A / OK button |
-| Scroll to top | `Home` key | - |
-
-### Floating Menu (for TV/Gamepad)
-When you scroll down, a floating red ghost button appears in the bottom-right corner. Click/select it to:
-- 🏠 Go Home
-- 🔍 Open Search
+5. **Open in Your Browser**
+Open your web browser and navigate to: **http://localhost:3000**
 
 ---
 
-## ✨ FEATURES
+## ✨ CORE FEATURES
 
-### 🎬 Streaming
-- Stream movies & TV shows via vidsrc-embed.ru
-- Browse by category: Trending, Action, Horror, Sci-Fi, etc.
-- Full episode selection for TV shows
-- "Coming Soon" indicator for unreleased content
+### 🎬 Cinematic Streaming
 
-### ⬇️ Download (FFmpeg)
-- Download movies and episodes using FFmpeg
-- Quality selection: Best, 1080p, 720p, 480p
-- Real-time progress tracking
-- **Requires FFmpeg installed on your computer**
+* **Integrated Streaming:** Stream movies and TV shows instantly via `vidsrc-embed.ru`.
+* **Rich Categories:** Browse dynamically through Trending, Action, Horror, Sci-Fi, and custom genres.
+* **TV Show Support:** Full season and episode selection interface.
+* **Coming Soon Badges:** Clear status indicators for unreleased or upcoming media.
 
-### 🎨 Design
-- Ghost logo throughout the app
-- Netflix-style infinite scrolling rows
-- Live wallpaper that blurs to match focused content
-- Color-adaptive glow borders based on movie poster
+### 🔊 Immersive Audio Experience
 
-### 🔊 Audio
-- **Cinematic startup** with deep bass impact
-- **Scary ambient background** - monster-like presence with:
-  - Deep bass breathing/pulsing
-  - Random distant thuds (footsteps)
-  - Eerie wind whispers
-- **PS5-style navigation sounds** on every interaction
+* **Cinematic Startup:** Deep bass impact upon launching the application.
+* **Scary Ambient Background:** Dynamic atmospheric soundscape featuring:
+* Deep bass breathing and pulsing tones.
+* Random distant footsteps and atmospheric thuds.
+* Eerie wind whispers for a haunted theater feel.
 
-### 📺 Navigation
-- **Home** - All content
-- **Movies** - Only movies
-- **TV Shows** - Only TV series
-- **My List** - Your bookmarked content
 
----
+* **UI Sound FX:** Interactive PS5-style navigation audio ticks on every click and focus change.
 
-## 💾 DOWNLOAD MOVIES (FFmpeg)
+### 🎨 Advanced Visual Design
 
-### Install FFmpeg First
+* **Adaptive Interface:** Dynamic live wallpapers that softly blur and adapt to your currently focused content.
+* **Glow Borders:** Color-adaptive lighting glows that match the dominant colors of movie posters.
+* **Infinite Rows:** Smooth, Netflix-style horizontal scrolling categories.
 
-**Windows:**
-1. Go to: https://ffmpeg.org/download.html
-2. Download a Windows build
-3. Extract and add to PATH (or put ffmpeg.exe in project folder)
+### 🎮 Comprehensive Navigation & Controls
 
-**Mac:**
-```bash
-brew install ffmpeg
-```
+* **Standard Keyboard & Mouse:** Fully accessible via standard shortcuts.
+* **Gamepad & TV Remotes:** Native-feeling D-pad support for smart TVs and game controllers.
+* **Floating Ghost Menu:** Appears automatically when scrolling down on TV/Gamepad views to quickly jump Home or open Search.
 
-**Linux:**
-```bash
-sudo apt install ffmpeg
-```
-
-### How to Download
-
-1. Click on a movie/episode
-2. Click **Download** button
-3. You need to find the stream URL:
-   - Open the video in browser
-   - Right-click → Inspect → Network tab
-   - Look for `.m3u8` or `.mp4` files
-   - Copy the URL
-4. Paste URL into the download dialog
-5. Select quality
-6. Click **Start Download**
+| Action | Keyboard | Controller / Remote |
+| --- | --- | --- |
+| **Search** | Press `/` or click 🔍 | Navigate to search bar |
+| **Go Back** | `Escape` or `Backspace` | Back button |
+| **Navigate** | Arrow keys / Tab | D-pad |
+| **Select** | Enter | `A` or `OK` button |
+| **Scroll to Top** | `Home` key | — |
 
 ---
 
-## ⚠️ TROUBLESHOOTING
+## 💾 OFFLINE DOWNLOADS (FFmpeg Integration)
+
+GhostStream allows you to download your favorite media locally using FFmpeg.
+
+### 1. Install FFmpeg
+
+* **Windows:** Download a build from [ffmpeg.org](https://ffmpeg.org/download.html), extract it, and add it to your system PATH (or place `ffmpeg.exe` directly inside the project root folder).
+* **Mac (Homebrew):** `brew install ffmpeg`
+* **Linux (APT):** `sudo apt install ffmpeg`
+
+### 2. How to Download
+
+1. Click on any movie or TV episode.
+2. Select the **Download** option.
+3. Locate the stream URL:
+* Open the video stream in your browser inspector.
+* Go to the **Network** tab and filter by `.m3u8` or `.mp4`.
+* Copy the direct stream URL.
+
+
+4. Paste the URL into the GhostStream download dialog box.
+5. Select your preferred resolution (Best, 1080p, 720p, 480p) and click **Start Download**. Track progress in real-time.
+
+---
+
+## ⚠️ TROUBLESHOOTING & FAQ
 
 | Problem | Solution |
-|---------|----------|
-| "npm not found" | Restart computer after installing Node.js |
-| Movies not loading | Check internet connection |
-| Video won't play | Try a different movie (some may be blocked) |
-| Download not working | Make sure FFmpeg is installed and in PATH |
-| No sound | Click anywhere on the page first (browsers block autoplay) |
+| --- | --- |
+| **`npm not found` error** | Make sure you installed Node.js and **restarted your computer** afterward. |
+| **Movies failing to load** | Check your internet connection or try switching to a different title (some host sources experience downtime). |
+| **Video won't play** | Ad-blockers or strict browser privacy extensions may interfere with embed frames. Try disabling them temporarily. |
+| **Download feature errors** | Ensure FFmpeg is correctly installed and accessible via your system PATH environment variables. |
+| **No background sound** | Modern browsers block autoplay audio. **Click anywhere on the page** once after loading to unlock audio execution. |
 
 ---
 
 ## 🛠️ TECH STACK
 
-- **Frontend:** Next.js 16, React 19, TypeScript
-- **Styling:** Tailwind CSS 4
-- **Audio:** Web Audio API (no external files)
-- **Data:** TMDB API
-- **Streaming:** vidsrc-embed.ru
-- **Downloads:** FFmpeg (local)
+* **Framework:** Next.js 16, React 19, TypeScript
+* **Styling:** Tailwind CSS 4
+* **Audio Engine:** Web Audio API (zero external audio asset files required)
+* **Metadata Provider:** TMDB API
+* **Media Embedding:** vidsrc-embed.ru
+* **Download Pipeline:** Local FFmpeg execution
 
 ---
 
-## 📱 DEVICE SUPPORT
+## 📱 DEVICE & PLATFORM SUPPORT
 
-- ✅ Desktop browsers (Chrome, Firefox, Edge, Safari)
-- ✅ Laptops
-- ✅ Tablets
-- ✅ Smart TVs (web browser)
-- ✅ Game controllers (D-pad navigation)
-- ✅ TV remotes
-
----
-
-## 🔑 API
-
-This key is included for demo purposes. For production, get your own key at:
-https://www.themoviedb.org/settings/api
+* ✅ Desktop Browsers (Chrome, Firefox, Edge, Safari)
+* ✅ Dedicated Desktop App builds (Windows, Mac, Linux via Releases)
+* ✅ Tablets & Mobile Web
+* ✅ Smart TVs (via integrated web browsers)
+* ✅ Game Controllers & Media Remotes
 
 ---
 
-Enjoy your movies! 🍿👻
+## 🔑 API CONFIGURATION
+
+GhostStream comes pre-configured with a demo TMDB API key for immediate testing. For heavy production usage or custom instances, obtain your own free API key at [The Movie Database Settings](https://www.themoviedb.org/settings/api) and add it to your environment variables (`.env.local`).
+
+---
+
+Enjoy your movie night! 🍿👻
