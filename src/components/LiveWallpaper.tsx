@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { TMDBMovie } from "@/lib/tmdb";
+import type { MediaItem } from "@/lib/catalog";
+import { posterUrl } from "@/lib/catalog";
 
 interface Props {
-  focusedMovie: TMDBMovie | null;
+  focusedItem: MediaItem | null;
 }
 
-export function LiveWallpaper({ focusedMovie }: Props) {
+export function LiveWallpaper({ focusedItem }: Props) {
   const [bgImage, setBgImage] = useState<string | null>(null);
   const [active, setActive] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -15,28 +16,37 @@ export function LiveWallpaper({ focusedMovie }: Props) {
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    if (focusedMovie?.backdrop_path) {
-      // Much faster response - 200ms delay
+    if (focusedItem) {
       timerRef.current = setTimeout(() => {
-        setBgImage(`https://image.tmdb.org/t/p/w1280${focusedMovie.backdrop_path}`);
+        setBgImage(posterUrl(focusedItem.id));
         setActive(true);
       }, 200);
     } else {
-      setActive(false);
-      timerRef.current = setTimeout(() => setBgImage(null), 500);
+      timerRef.current = setTimeout(() => {
+        setActive(false);
+        setBgImage(null);
+      }, 500);
     }
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [focusedMovie]);
+  }, [focusedItem]);
 
   return (
     <>
       <div className="live-wallpaper" />
       <div
         className={`live-wallpaper-image ${active ? "active" : ""}`}
-        style={bgImage ? { backgroundImage: `url(${bgImage})` } : {}}
+        style={
+          bgImage
+            ? {
+                backgroundImage: `url(${bgImage})`,
+                filter: "blur(60px) saturate(1.4) brightness(0.45)",
+                transform: "scale(1.4)",
+              }
+            : {}
+        }
       />
     </>
   );

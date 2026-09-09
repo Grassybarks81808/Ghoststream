@@ -1,55 +1,30 @@
 "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
-import { TMDBMovie, posterURL } from "@/lib/tmdb";
+import type { MediaItem } from "@/lib/catalog";
+import { posterUrl, formatRuntime } from "@/lib/catalog";
+import { useProgress } from "@/lib/localStore";
 import { playNavSound, playHoverSound } from "@/lib/sounds";
 import { extractDominantColor } from "@/lib/colorExtract";
-import { GhostLogoSad } from "./GhostLogo";
 
 interface Props {
   title: string;
-  items: TMDBMovie[];
+  items: MediaItem[];
   delay: number;
-  onSelect: (movie: TMDBMovie) => void;
-  onFocus: (movie: TMDBMovie | null) => void;
-  onLoadMore: () => void;
+  onSelect: (item: MediaItem) => void;
+  onFocus: (item: MediaItem | null) => void;
 }
 
-// Check if movie is released - robust check
-function isMovieReleased(movie: TMDBMovie): boolean {
-  const releaseDateStr = movie.release_date || movie.first_air_date;
-  if (!releaseDateStr) return true; // No date = assume released
-  
-  try {
-    const releaseDate = new Date(releaseDateStr);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    releaseDate.setHours(0, 0, 0, 0);
-    return releaseDate <= today;
-  } catch {
-    return true;
-  }
-}
-
-export function ContentRow({ title, items, delay, onSelect, onFocus, onLoadMore }: Props) {
+export function ContentRow({ title, items, delay, onSelect, onFocus }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const loadTriggered = useRef(false);
 
   const scroll = useCallback((dir: number) => {
     if (!scrollRef.current) return;
     playNavSound();
-    scrollRef.current.scrollBy({ left: dir * 600, behavior: "smooth" });
+    scrollRef.current.scrollBy({ left: dir * 640, behavior: "smooth" });
   }, []);
 
-  const handleScroll = useCallback(() => {
-    if (!scrollRef.current || loadTriggered.current) return;
-    const el = scrollRef.current;
-    if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 400) {
-      loadTriggered.current = true;
-      onLoadMore();
-      setTimeout(() => { loadTriggered.current = false; }, 2000);
-    }
-  }, [onLoadMore]);
+  if (items.length === 0) return null;
 
   return (
     <div className="gs-row mb-8 px-4 md:px-6 lg:px-12" style={{ animationDelay: `${delay}s` }}>
@@ -58,7 +33,7 @@ export function ContentRow({ title, items, delay, onSelect, onFocus, onLoadMore 
         {/* Scroll arrows */}
         <button
           onClick={() => scroll(-1)}
-          className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/80 to-transparent z-10 
+          className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/80 to-transparent z-10
                      flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity nav-focusable"
           aria-label="Scroll left"
         >
@@ -68,7 +43,7 @@ export function ContentRow({ title, items, delay, onSelect, onFocus, onLoadMore 
         </button>
         <button
           onClick={() => scroll(1)}
-          className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/80 to-transparent z-10 
+          className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/80 to-transparent z-10
                      flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity nav-focusable"
           aria-label="Scroll right"
         >
@@ -77,18 +52,9 @@ export function ContentRow({ title, items, delay, onSelect, onFocus, onLoadMore 
           </svg>
         </button>
 
-        <div
-          ref={scrollRef}
-          className="gs-row-scroll flex gap-2 md:gap-3 overflow-x-auto py-4"
-          onScroll={handleScroll}
-        >
-          {items.map((movie, idx) => (
-            <MovieCard
-              key={`${movie.id}-${idx}`}
-              movie={movie}
-              onSelect={onSelect}
-              onFocus={onFocus}
-            />
+        <div ref={scrollRef} className="gs-row-scroll flex gap-2 md:gap-3 overflow-x-auto py-4">
+          {items.map((item, idx) => (
+            <MovieCard key={`${item.id}-${idx}`} item={item} onSelect={onSelect} onFocus={onFocus} />
           ))}
         </div>
       </div>
@@ -97,40 +63,36 @@ export function ContentRow({ title, items, delay, onSelect, onFocus, onLoadMore 
 }
 
 function MovieCard({
-  movie,
+  item,
   onSelect,
   onFocus,
 }: {
-  movie: TMDBMovie;
-  onSelect: (m: TMDBMovie) => void;
-  onFocus: (m: TMDBMovie | null) => void;
+  item: MediaItem;
+  onSelect: (m: MediaItem) => void;
+  onFocus: (m: MediaItem | null) => void;
 }) {
   const [glowColor, setGlowColor] = useState("#e50914");
   const [isFocused, setIsFocused] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
   const colorExtracted = useRef(false);
+  const prior = useProgress(item.id);
+  const progress =
+    prior && prior.duration > 0 ? Math.min(100, (prior.position / prior.duration) * 100) : 0;
 
-  const title = movie.title || movie.name || "";
-  const year = (movie.release_date || movie.first_air_date || "").substring(0, 4);
-  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "";
-  const poster = posterURL(movie.poster_path, "w342");
+  const poster = posterUrl(item.id);
 
-  // Check if movie is released
-  const isReleased = isMovieReleased(movie);
-  const releaseDate = movie.release_date || movie.first_air_date;
-
-  // Extract color on hover
   useEffect(() => {
-    if (isFocused && poster && !colorExtracted.current) {
+    if (isFocused && !colorExtracted.current && !imgFailed) {
       colorExtracted.current = true;
       extractDominantColor(poster).then(setGlowColor);
     }
-  }, [isFocused, poster]);
+  }, [isFocused, poster, imgFailed]);
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);
     playHoverSound();
-    onFocus(movie);
-  }, [movie, onFocus]);
+    onFocus(item);
+  }, [item, onFocus]);
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
@@ -139,12 +101,13 @@ function MovieCard({
 
   return (
     <div
-      className="gs-card flex-shrink-0 w-36 md:w-44 lg:w-48 nav-focusable relative"
+      className="gs-card gs-card-wide nav-focusable relative"
       tabIndex={0}
       role="button"
+      aria-label={`${item.title} (${item.year})`}
       onClick={() => {
         playNavSound();
-        onSelect(movie);
+        onSelect(item);
       }}
       onMouseEnter={handleFocus}
       onMouseLeave={handleBlur}
@@ -153,13 +116,13 @@ function MovieCard({
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           playNavSound();
-          onSelect(movie);
+          onSelect(item);
         }
       }}
       style={
         isFocused
           ? {
-              boxShadow: `0 0 30px ${glowColor}, 0 0 60px ${glowColor}40`,
+              boxShadow: `0 0 30px ${glowColor}66, 0 0 60px ${glowColor}33`,
               borderColor: glowColor,
               outline: `2px solid ${glowColor}`,
               outlineOffset: "2px",
@@ -167,59 +130,53 @@ function MovieCard({
           : {}
       }
     >
-      <div className="relative aspect-[2/3] bg-[#1a1a1a]">
-        {poster ? (
+      <div className="relative aspect-video bg-[#1a1a1a] overflow-hidden rounded-t-xl">
+        {!imgFailed ? (
           <img
             src={poster}
-            alt={title}
-            className={`w-full h-full object-cover ${!isReleased ? "opacity-50 grayscale-[30%]" : ""}`}
+            alt={item.title}
+            className="w-full h-full object-cover"
             loading="lazy"
+            onError={() => setImgFailed(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm text-center p-2">
-            {title}
+          <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 gap-2">
+            <span className="text-3xl">🎬</span>
+            <span className="text-xs text-center px-2 line-clamp-2">{item.title}</span>
           </div>
         )}
 
-        {/* Coming Soon overlay for unreleased movies */}
-        {!isReleased && (
-          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
-            <GhostLogoSad size={40} />
-            <span className="text-xs font-bold mt-2 text-gray-300 uppercase tracking-wider">
-              Coming Soon
+        {/* hover overlay */}
+        <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-3">
+          <h3 className="text-sm font-bold line-clamp-1">{item.title}</h3>
+          <div className="flex items-center gap-2 text-xs text-gray-300 mt-0.5">
+            <span>{item.year}</span>
+            {item.runtime ? <span className="text-gray-600">·</span> : null}
+            {item.runtime ? <span>{formatRuntime(item.runtime)}</span> : null}
+            <span className="text-gray-600">·</span>
+            <span className="uppercase text-[10px] tracking-wide bg-white/15 px-1.5 py-0.5 rounded">
+              {item.kind === "cartoon" ? "Cartoon" : "Movie"}
             </span>
-            {releaseDate && (
-              <span className="text-[10px] text-gray-500 mt-1">
-                {new Date(releaseDate).toLocaleDateString()}
-              </span>
-            )}
           </div>
-        )}
+          <div className="flex gap-2 mt-2 items-center">
+            <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#000">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+            </span>
+            <span className="text-[10px] text-gray-400 line-clamp-1 flex-1">
+              Free · Public Domain · No Ads
+            </span>
+          </div>
+        </div>
 
-        {/* Hover overlay for released movies */}
-        {isReleased && (
-          <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end p-3">
-            <h3 className="text-sm font-bold line-clamp-2 mb-1">{title}</h3>
-            <div className="flex items-center gap-2 text-xs text-gray-300">
-              {rating && (
-                <span className="text-green-400 font-semibold flex items-center gap-0.5">
-                  ★ {rating}
-                </span>
-              )}
-              {year && <span>{year}</span>}
-            </div>
-            <div className="flex gap-2 mt-2">
-              <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="#000">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-              <div className="w-7 h-7 rounded-full bg-white/20 border border-white/40 flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </div>
-            </div>
+        {/* watch progress bar */}
+        {progress > 2 && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
+            <div
+              className="h-full bg-[#e50914]"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         )}
       </div>

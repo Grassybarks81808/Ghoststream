@@ -478,3 +478,118 @@ body {
     font-size: 1.1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GHOSTSTREAM 2.0 — public-domain edition additions
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Landscape (16:9) cards — archive.org thumbs are video frames */
+.gs-card-wide {
+  flex-shrink: 0;
+  width: 260px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .gs-card-wide { width: 300px; }
+}
+@media (min-width: 1280px) {
+  .gs-card-wide { width: 340px; }
+}
+
+.gs-card-wide .card-info {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Hero — sharp poster panel on the right */
+.hero-poster-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 42%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.hero-poster-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.15) 45%, rgba(10,10,10,0.55) 100%);
+}
+
+@media (min-width: 900px) {
+  .hero-poster-wrap { display: flex; }
+}
+
+.hero-poster-img {
+  max-height: 62vh;
+  max-width: 78%;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.08);
+  position: relative;
+  z-index: 4;
+  animation: fadeInScale 1s ease-out;
+}
+
+/* Video player range inputs */
+.gs-seek,
+.gs-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 24px;
+  cursor: pointer;
+}
+
+.gs-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+}
+
+.gs-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+.gs-volume::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+/* Player overlay is now a video container, not an iframe */
+.player-overlay video {
+  object-fit: contain;
+}
+
+/* genre chips in detail modal */
+.bg-white\/8 {
+  background: rgba(255,255,255,0.08);
+}
+
+/* kbd hint styling */
+kbd {
+  font-family: inherit;
+  font-size: 0.85em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+}

@@ -1,173 +1,105 @@
 # 👻 GHOSTSTREAM
 
-**The Ultimate Cinematic Streaming Experience** — A high-end, Netflix-style web application designed with epic cinematic vibes, ambient audio design, gamepad support, and local download capabilities.
+**Free movies. Zero ads. Public domain forever.**
+
+A Netflix-style streaming app for **110+ hand-curated public-domain classics** — horror, film noir, sci-fi, silent comedy (Keaton! Chaplin!), vintage cartoons, westerns, Hitchcock thrillers and gloriously terrible B-movies. Everything is streamed and downloaded **directly from the Internet Archive**, so it's 100% legal, 100% free, and there will never be an ad, an account, or a subscription.
 
 ---
 
-## 📦 QUICK START: DOWNLOAD THE APP
+## ⚡ Quick start (source)
 
-Don't want to mess with source code, terminal commands, or Node.js?
-
-1. Head over to the **[Releases](https://www.google.com/search?q=../../releases)** page.
-2. Download the pre-built installer or executable package for your operating system (**Windows**, **macOS**, or **Linux**).
-3. Run the installer and enjoy instant streaming!
-
----
-
-## 🛠️ ALTERNATIVE: RUN FROM SOURCE
-
-If you are a developer or prefer to run the project locally via source code, follow these steps:
-
-### Prerequisites
-
-* **Node.js**: Version 18+ recommended (Download from [nodejs.org](https://nodejs.org)).
-* **FFmpeg**: Optional, required only if you want to use the local video download feature.
-
-### Step-by-Step Installation
-
-1. **Clone or Download the Repository**
-Download and extract the project folder to your local machine (e.g., your Desktop).
-2. **Open Terminal / Command Prompt**
-* **Windows:** Press `Win + R`, type `cmd`, and press Enter. Then run:
 ```bash
-cd Desktop\ghoststream
-
-```
-
-
-* **Mac / Linux:** Open your Terminal app and run:
-```bash
-cd ~/Desktop/ghoststream
-
-```
-
-
-
-
-3. **Install Dependencies**
-```bash
+git clone <this repo> ghoststream
+cd ghoststream
 npm install
-
+npm run dev          # → http://localhost:3000
 ```
 
+Production build (fully static, host anywhere):
 
-*(Please allow 1–2 minutes for packages to download.)*
-4. **Start Development Server**
 ```bash
-npm run dev
-
+npm run build        # → ./out  (pure static files — no server needed)
 ```
 
+### Windows portable (no Node.js required)
 
-5. **Open in Your Browser**
-Open your web browser and navigate to: **http://localhost:3000**
+Grab the **[Releases](../../releases)** page and download
+`Ghoststream-x.x.x-Windows-Portable.zip`. Extract it anywhere and double-click
+**`Start Ghoststream.bat`** — it ships with its own zero-dependency local server.
 
----
+### Android / iOS
 
-## ✨ CORE FEATURES
-
-### 🎬 Cinematic Streaming
-
-* **Integrated Streaming:** Stream movies and TV shows instantly via `vidsrc-embed.ru`.
-* **Rich Categories:** Browse dynamically through Trending, Action, Horror, Sci-Fi, and custom genres.
-* **TV Show Support:** Full season and episode selection interface.
-* **Coming Soon Badges:** Clear status indicators for unreleased or upcoming media.
-
-### 🔊 Immersive Audio Experience
-
-* **Cinematic Startup:** Deep bass impact upon launching the application.
-* **Scary Ambient Background:** Dynamic atmospheric soundscape featuring:
-* Deep bass breathing and pulsing tones.
-* Random distant footsteps and atmospheric thuds.
-* Eerie wind whispers for a haunted theater feel.
-
-
-* **UI Sound FX:** Interactive PS5-style navigation audio ticks on every click and focus change.
-
-### 🎨 Advanced Visual Design
-
-* **Adaptive Interface:** Dynamic live wallpapers that softly blur and adapt to your currently focused content.
-* **Glow Borders:** Color-adaptive lighting glows that match the dominant colors of movie posters.
-* **Infinite Rows:** Smooth, Netflix-style horizontal scrolling categories.
-
-### 🎮 Comprehensive Navigation & Controls
-
-* **Standard Keyboard & Mouse:** Fully accessible via standard shortcuts.
-* **Gamepad & TV Remotes:** Native-feeling D-pad support for smart TVs and game controllers.
-* **Floating Ghost Menu:** Appears automatically when scrolling down on TV/Gamepad views to quickly jump Home or open Search.
-
-| Action | Keyboard | Controller / Remote |
-| --- | --- | --- |
-| **Search** | Press `/` or click 🔍 | Navigate to search bar |
-| **Go Back** | `Escape` or `Backspace` | Back button |
-| **Navigate** | Arrow keys / Tab | D-pad |
-| **Select** | Enter | `A` or `OK` button |
-| **Scroll to Top** | `Home` key | — |
+Ghoststream is an installable **PWA**. Host the build (or use any deployment of
+it), open it in Chrome, and choose **Add to Home screen**. You get a
+full-screen app with an icon, offline browsing of the catalog, and one-tap
+playback.
 
 ---
 
-## 💾 OFFLINE DOWNLOADS (FFmpeg Integration)
+## 🎬 What's inside
 
-GhostStream allows you to download your favorite media locally using FFmpeg.
-
-### 1. Install FFmpeg
-
-* **Windows:** Download a build from [ffmpeg.org](https://ffmpeg.org/download.html), extract it, and add it to your system PATH (or place `ffmpeg.exe` directly inside the project root folder).
-* **Mac (Homebrew):** `brew install ffmpeg`
-* **Linux (APT):** `sudo apt install ffmpeg`
-
-### 2. How to Download
-
-1. Click on any movie or TV episode.
-2. Select the **Download** option.
-3. Locate the stream URL:
-* Open the video stream in your browser inspector.
-* Go to the **Network** tab and filter by `.m3u8` or `.mp4`.
-* Copy the direct stream URL.
-
-
-4. Paste the URL into the GhostStream download dialog box.
-5. Select your preferred resolution (Best, 1080p, 720p, 480p) and click **Start Download**. Track progress in real-time.
-
----
-
-## ⚠️ TROUBLESHOOTING & FAQ
-
-| Problem | Solution |
+| Collection | Highlights |
 | --- | --- |
-| **`npm not found` error** | Make sure you installed Node.js and **restarted your computer** afterward. |
-| **Movies failing to load** | Check your internet connection or try switching to a different title (some host sources experience downtime). |
-| **Video won't play** | Ad-blockers or strict browser privacy extensions may interfere with embed frames. Try disabling them temporarily. |
-| **Download feature errors** | Ensure FFmpeg is correctly installed and accessible via your system PATH environment variables. |
-| **No background sound** | Modern browsers block autoplay audio. **Click anywhere on the page** once after loading to unlock audio execution. |
+| 👻 **Horror Classics** | *Night of the Living Dead*, *Nosferatu*, *Carnival of Souls*, *House on Haunted Hill*, *White Zombie*, *The Phantom of the Opera*, *Caligari*, *Häxan* |
+| 🕵️ **Film Noir & Thrillers** | *Detour*, *D.O.A.*, *The Hitch-Hiker*, *Suddenly*, *Kansas City Confidential*, *The Stranger* (Welles), *The Amazing Mr. X* |
+| 🚀 **Sci-Fi & Space** | *Metropolis*, *The Last Man on Earth*, *The Lost World*, *Rocketship X-M*, *The Phantom Planet*, *First Spaceship on Venus* |
+| 🎩 **Comedy & Musical** | *His Girl Friday*, *Charade*, *My Man Godfrey*, *Nothing Sacred*, Martin & Lewis, Abbott & Costello, *Rock Rock Rock!* |
+| 🎬 **Silent Masterpieces** | *The General*, *Steamboat Bill Jr.*, *Sherlock Jr.*, *The Thief of Bagdad*, *The Kid*, *Battleship Potemkin* |
+| 🎨 **Vintage Cartoons** | Fleischer *Superman*, *Betty Boop*, *Popeye Meets Sindbad*, *Gulliver's Travels* (1939), Casper, Mighty Mouse, Woody Woodpecker |
+| 🤠 **Wild West** | *Angel and the Badman* (John Wayne), the Lone Star westerns, *West of Hot Dog* (Keaton!) |
+| 🤪 **So Bad, They're Good** | *Plan 9 from Outer Space*, *Glen or Glenda*, *Robot Monster*, *The Brain That Wouldn't Die*, *The Killer Shrews* |
+| 🎭 **Hitchcock Classics** | *The 39 Steps*, *The Lady Vanishes*, *Secret Agent*, *Young and Innocent* |
+| 📽️ **Pioneers of Cinema** | *A Trip to the Moon*, *The Great Train Robbery*, *Frankenstein* (1910), *Man with a Movie Camera*, *Nanook of the North* |
+
+Every title is in the **public domain (US)** and was hand-checked — this app
+does not touch pirated sources.
 
 ---
 
-## 🛠️ TECH STACK
+## ✨ Features
 
-* **Framework:** Next.js 16, React 19, TypeScript
+- **🍿 Instant streaming** — custom video player with resume, 10-second skips, playback speed, volume, fullscreen, and keyboard shortcuts (`space`, `←` `→`, `F`, `M`).
+- **⬇️ Real downloads** — pick your quality, watch the progress bar, keep the file forever. Files come straight from archive.org; they're public domain, so they're *yours*.
+- **🔎 Instant search** — press `/` anywhere. Search titles, genres, years, and cast names.
+- **➕ My List & Continue Watching** — stored locally on your device. No accounts, no tracking, ever.
+- **📱 Installable PWA** — Add to Home screen on Android/iOS, or install from Chrome/Edge on desktop. Offline catalog browsing via service worker.
+- **👻 Cinematic vibes** — ambient haunted-theater soundscape, PS5-style nav sounds, adaptive glow borders that match each film's colors, live blurred wallpaper, gamepad/TV-remote friendly navigation.
+
+---
+
+## 🛠️ Tech stack
+
+* **Framework:** Next.js 16 (App Router, static export) + React 19 + TypeScript
 * **Styling:** Tailwind CSS 4
-* **Audio Engine:** Web Audio API (zero external audio asset files required)
-* **Metadata Provider:** TMDB API
-* **Media Embedding:** vidsrc-embed.ru
-* **Download Pipeline:** Local FFmpeg execution
+* **Content:** [Internet Archive](https://archive.org) — public-domain feature films & cartoons, resolved client-side via their CORS-enabled metadata API
+* **Storage:** localStorage (My List, history, stream cache)
+* **Audio:** Web Audio API (zero audio assets)
+* **Packaging:** zero-dependency PowerShell launcher for Windows
+
+### How it works
+
+1. `src/lib/catalog.ts` holds a curated, verified list of ~110 archive.org identifiers with rich metadata (title, year, genres, synopsis).
+2. When you press play or download, `src/lib/archive.ts` fetches that item's file list from `https://archive.org/metadata/<id>` **in your browser** (CORS-enabled), ranks the available MP4s by quality, and streams/downloads the best one.
+3. There is no backend, no database, and no proxy — the app is a static site. Your device talks directly to archive.org.
 
 ---
 
-## 📱 DEVICE & PLATFORM SUPPORT
+## ⌨️ Shortcuts
 
-* ✅ Desktop Browsers (Chrome, Firefox, Edge, Safari)
-* ✅ Dedicated Desktop App builds (Windows, Mac, Linux via Releases)
-* ✅ Tablets & Mobile Web
-* ✅ Smart TVs (via integrated web browsers)
-* ✅ Game Controllers & Media Remotes
-
----
-
-## 🔑 API CONFIGURATION
-
-GhostStream comes pre-configured with a demo TMDB API key for immediate testing. For heavy production usage or custom instances, obtain your own free API key at [The Movie Database Settings](https://www.themoviedb.org/settings/api) and add it to your environment variables (`.env.local`).
+| Action | Keyboard |
+| --- | --- |
+| Search | `/` |
+| Play / pause | `space` or `K` |
+| Skip ±10s | `←` / `→` |
+| Volume | `↑` / `↓` |
+| Mute | `M` |
+| Fullscreen | `F` (or double-click video) |
+| Close / back | `Esc` |
 
 ---
 
-Enjoy your movie night! 🍿👻
+## ⚖️ Legal
+
+* All films in the catalog are in the **public domain in the United States** (pre-1931 works, or post-1930 works whose copyrights lapsed through non-renewal or missing notice — e.g. *Night of the Living Dead*, *Charade*, *His Girl Friday*).
+* Content is served by the Internet Archive. Please be respectful of archive.org — downloads are direct and unthrottled by design, so don't hammer it.
+* This project hosts no video files itself.

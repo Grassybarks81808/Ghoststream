@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { GhostLogo } from "./GhostLogo";
 import { playNavSound } from "@/lib/sounds";
+import { STATS } from "@/lib/catalog";
 
 interface Props {
   onSearch: () => void;
@@ -13,6 +14,7 @@ interface Props {
 
 export function Navbar({ onSearch, onHome, onFilter, activeFilter }: Props) {
   const [scrolled, setScrolled] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<{ prompt: () => Promise<void> } | null>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 50);
@@ -20,10 +22,20 @@ export function Navbar({ onSearch, onHome, onFilter, activeFilter }: Props) {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // PWA install prompt (Chrome / Edge / Android)
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as unknown as { prompt: () => Promise<void> });
+    };
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", onPrompt);
+  }, []);
+
   const navItems = [
     { id: "all", label: "Home" },
-    { id: "movie", label: "Movies" },
-    { id: "tv", label: "TV Shows" },
+    { id: "movies", label: "Movies" },
+    { id: "cartoons", label: "Cartoons" },
     { id: "mylist", label: "My List" },
   ];
 
@@ -49,12 +61,8 @@ export function Navbar({ onSearch, onHome, onFilter, activeFilter }: Props) {
               key={item.id}
               onClick={() => {
                 playNavSound();
-                if (item.id === "mylist") {
-                  onFilter("mylist");
-                } else {
-                  onFilter(item.id);
-                  if (item.id === "all") onHome();
-                }
+                onFilter(item.id);
+                if (item.id === "all") onHome();
               }}
               className={`nav-focusable px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                 activeFilter === item.id
@@ -69,6 +77,25 @@ export function Navbar({ onSearch, onHome, onFilter, activeFilter }: Props) {
       </div>
 
       <div className="flex items-center gap-3">
+        {installPrompt && (
+          <button
+            onClick={async () => {
+              playNavSound();
+              await installPrompt.prompt();
+              setInstallPrompt(null);
+            }}
+            className="nav-focusable hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-[#e50914] hover:bg-[#ff1a27] text-sm font-bold transition-colors"
+            title="Install Ghoststream as an app"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            <span className="hidden lg:inline">Install App</span>
+          </button>
+        )}
+        <span className="hidden xl:block text-xs text-gray-500">
+          {STATS.titles} free titles
+        </span>
         <button
           onClick={() => {
             playNavSound();
