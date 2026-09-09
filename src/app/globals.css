@@ -593,3 +593,54 @@ kbd {
   background: rgba(255,255,255,0.12);
   border: 1px solid rgba(255,255,255,0.15);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GHOSTSTREAM 2.1 — TMDB poster cards & rating badges
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Portrait (2:3) poster cards — real TMDB artwork */
+.gs-card-poster {
+  flex-shrink: 0;
+  width: 148px;
+  border-radius: 12px;
+  background: #181818;
+}
+
+@media (min-width: 768px) {
+  .gs-card-poster { width: 168px; }
+}
+@media (min-width: 1280px) {
+  .gs-card-poster { width: 188px; }
+}
+
+/* Grid variant (search results / my list) — width driven by grid */
+.gs-card-poster-grid {
+  width: 100%;
+}
+
+/* TMDB rating badge */
+.gs-rating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  font-size: 11px;
+  font-weight: 700;
+  color: #4ade80;
+  pointer-events: none;
+}
+
+/* Subtle fade-in when TMDB art swaps in over archive art */
+@keyframes gsArtSwap {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.gs-art-swap {
+  animation: gsArtSwap 0.6s ease-out;
+}

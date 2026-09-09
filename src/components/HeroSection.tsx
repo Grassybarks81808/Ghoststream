@@ -1,7 +1,8 @@
 "use client";
 
 import type { MediaItem } from "@/lib/catalog";
-import { posterUrl, formatRuntime } from "@/lib/catalog";
+import { formatRuntime } from "@/lib/catalog";
+import { useTmdbMeta, artFor } from "@/lib/tmdb";
 import { GhostLogo } from "./GhostLogo";
 
 interface Props {
@@ -11,26 +12,37 @@ interface Props {
 }
 
 export function HeroSection({ item, onPlay, onDetails }: Props) {
-  const poster = posterUrl(item.id);
+  const meta = useTmdbMeta(item);
+  const art = artFor(item, meta);
 
   return (
     <section className="hero-section">
-      {/* Blurred backdrop built from the poster */}
+      {/* Full-bleed backdrop — real TMDB key art when available */}
       <div className="hero-backdrop overflow-hidden">
         <img
-          src={poster}
+          key={art.backdrop}
+          src={art.backdrop}
           alt=""
           aria-hidden
-          className="w-full h-full object-cover"
-          style={{ filter: "blur(18px) saturate(1.3) brightness(0.55)", transform: "scale(1.25)" }}
+          className={`w-full h-full object-cover ${art.backdropIsTmdb ? "gs-art-swap" : ""}`}
+          style={
+            art.backdropIsTmdb
+              ? { filter: "brightness(0.62) saturate(1.15)" }
+              : {
+                  filter: "blur(18px) saturate(1.3) brightness(0.55)",
+                  transform: "scale(1.25)",
+                }
+          }
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/35 to-[#0a0a0a]/70" />
       </div>
       {/* Sharp poster, right side */}
       <div className="hero-poster-wrap">
         <img
-          src={poster}
+          key={art.poster}
+          src={art.poster}
           alt={item.title}
-          className="hero-poster-img"
+          className={`hero-poster-img ${art.posterIsTmdb ? "gs-art-swap" : ""}`}
         />
       </div>
 
@@ -46,6 +58,14 @@ export function HeroSection({ item, onPlay, onDetails }: Props) {
             {item.title}
           </h1>
           <div className="flex flex-wrap items-center gap-3 mb-4 text-sm md:text-base">
+            {meta?.rating != null && (
+              <span className="flex items-center gap-1 px-2 py-0.5 bg-green-600/25 text-green-400 rounded text-xs font-bold">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                {meta.rating.toFixed(1)}
+              </span>
+            )}
             <span className="text-gray-300">{item.year}</span>
             {item.runtime ? (
               <>
@@ -65,6 +85,21 @@ export function HeroSection({ item, onPlay, onDetails }: Props) {
               </span>
             )}
           </div>
+          {(meta?.genres?.length || item.genres.length > 0) && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {(meta?.genres?.length ? meta.genres : item.genres)
+                .filter((g) => g !== "featured")
+                .slice(0, 4)
+                .map((g) => (
+                  <span
+                    key={g}
+                    className="text-xs px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-gray-200"
+                  >
+                    {g}
+                  </span>
+                ))}
+            </div>
+          )}
           <p className="text-gray-300 text-base md:text-lg mb-8 line-clamp-3">{item.overview}</p>
           <div className="flex flex-wrap gap-3">
             <button onClick={onPlay} className="gs-btn gs-btn-primary nav-focusable">

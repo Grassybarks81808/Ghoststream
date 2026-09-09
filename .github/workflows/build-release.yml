@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: v2.0.1
+  VERSION: v2.1.0
 
 jobs:
   build-and-attach:

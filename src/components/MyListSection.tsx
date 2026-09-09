@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import type { MediaItem } from "@/lib/catalog";
-import { posterUrl, getItem, formatRuntime } from "@/lib/catalog";
+import { getItem, formatRuntime } from "@/lib/catalog";
 import {
   removeBookmark,
   clearHistory,
@@ -14,6 +14,7 @@ import {
 import { formatTime } from "@/lib/localStore";
 import { playNavSound, playHoverSound, playBackSound } from "@/lib/sounds";
 import { extractDominantColor } from "@/lib/colorExtract";
+import { useTmdbMeta, artFor } from "@/lib/tmdb";
 import { GhostLogo, GhostLogoSad } from "./GhostLogo";
 
 interface Props {
@@ -102,7 +103,7 @@ export function MyListSection({ onSelect, onFocus }: Props) {
       )}
 
       {tab === "list" && bookmarks.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
           {bookmarks.map((b) => (
             <ListCard
               key={b.id}
@@ -127,7 +128,7 @@ export function MyListSection({ onSelect, onFocus }: Props) {
       )}
 
       {tab === "history" && history.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
           {history.map((h) => {
             const full = getItem(h.id);
             const item: MediaItem =
@@ -139,35 +140,64 @@ export function MyListSection({ onSelect, onFocus }: Props) {
                 genres: [],
                 kind: h.kind,
               };
-            const pct = h.duration > 0 ? Math.min(100, (h.position / h.duration) * 100) : 0;
-            return (
-              <button
-                key={h.id}
-                className="gs-card gs-card-wide nav-focusable text-left"
-                onClick={() => {
-                  playNavSound();
-                  onSelect(item);
-                }}
-              >
-                <div className="relative aspect-video bg-[#1a1a1a] overflow-hidden rounded-t-xl">
-                  <img src={posterUrl(h.id)} alt={h.title} className="w-full h-full object-cover" loading="lazy" />
-                  <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-3">
-                    <h3 className="text-sm font-bold line-clamp-1">{h.title}</h3>
-                    <p className="text-xs text-gray-300 mt-0.5">
-                      {formatTime(h.position)}
-                      {h.duration > 0 ? ` / ${formatTime(h.duration)}` : ""} watched
-                    </p>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
-                    <div className="h-full bg-[#e50914]" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              </button>
-            );
+            return <HistoryCard key={h.id} item={item} entry={h} onSelect={onSelect} />;
           })}
         </div>
       )}
     </div>
+  );
+}
+
+function HistoryCard({
+  item,
+  entry,
+  onSelect,
+}: {
+  item: MediaItem;
+  entry: HistoryEntry;
+  onSelect: (m: MediaItem) => void;
+}) {
+  const meta = useTmdbMeta(item);
+  const art = artFor(item, meta);
+  const pct = entry.duration > 0 ? Math.min(100, (entry.position / entry.duration) * 100) : 0;
+  const [imgFailed, setImgFailed] = useState(false);
+
+  return (
+    <button
+      className="gs-card gs-card-poster gs-card-poster-grid nav-focusable text-left"
+      onClick={() => {
+        playNavSound();
+        onSelect(item);
+      }}
+    >
+      <div className="relative aspect-[2/3] bg-[#1a1a1a] overflow-hidden rounded-t-xl">
+        {!imgFailed ? (
+          <img
+            key={art.poster}
+            src={art.poster}
+            alt={item.title}
+            className={`w-full h-full object-cover ${art.posterIsTmdb ? "gs-art-swap" : "object-top"}`}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 gap-2">
+            <span className="text-3xl">🎬</span>
+            <span className="text-xs text-center px-2 line-clamp-2">{item.title}</span>
+          </div>
+        )}
+        <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-2.5">
+          <h3 className="text-xs md:text-sm font-bold line-clamp-2">{item.title}</h3>
+          <p className="text-[10px] md:text-xs text-gray-300 mt-0.5">
+            {formatTime(entry.position)}
+            {entry.duration > 0 ? ` / ${formatTime(entry.duration)}` : ""} watched
+          </p>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
+          <div className="h-full bg-[#e50914]" style={{ width: `${pct}%` }} />
+        </div>
+      </div>
+    </button>
   );
 }
 
@@ -184,13 +214,16 @@ function ListCard({
 }) {
   const [glowColor, setGlowColor] = useState("#e50914");
   const [isFocused, setIsFocused] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+  const meta = useTmdbMeta(item);
+  const art = artFor(item, meta);
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);
     playHoverSound();
     onFocus(item);
-    extractDominantColor(posterUrl(item.id)).then(setGlowColor);
-  }, [item, onFocus]);
+    if (!imgFailed) extractDominantColor(art.poster).then(setGlowColor);
+  }, [item, onFocus, art.poster, imgFailed]);
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
@@ -199,7 +232,7 @@ function ListCard({
 
   return (
     <div
-      className={`gs-card gs-card-wide nav-focusable ${isFocused ? "" : ""}`}
+      className="gs-card gs-card-poster gs-card-poster-grid nav-focusable"
       tabIndex={0}
       role="button"
       onClick={() => {
@@ -230,14 +263,37 @@ function ListCard({
           : {}
       }
     >
-      <div className="relative aspect-video bg-[#1a1a1a] overflow-hidden rounded-t-xl">
-        <img src={posterUrl(item.id)} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
-        <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end p-3">
-          <h3 className="text-sm font-bold line-clamp-1">{item.title}</h3>
-          <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+      <div className="relative aspect-[2/3] bg-[#1a1a1a] overflow-hidden rounded-t-xl">
+        {!imgFailed ? (
+          <img
+            key={art.poster}
+            src={art.poster}
+            alt={item.title}
+            className={`w-full h-full object-cover ${art.posterIsTmdb ? "gs-art-swap" : "object-top"}`}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 gap-2">
+            <span className="text-3xl">🎬</span>
+            <span className="text-xs text-center px-2 line-clamp-2">{item.title}</span>
+          </div>
+        )}
+
+        {meta?.rating != null && (
+          <span className="gs-rating">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            {meta.rating.toFixed(1)}
+          </span>
+        )}
+
+        <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end p-2.5">
+          <h3 className="text-xs md:text-sm font-bold line-clamp-2">{item.title}</h3>
+          <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-gray-400 mt-0.5">
             <span>{item.year}</span>
             {item.runtime ? <span>· {formatRuntime(item.runtime)}</span> : null}
-            <span className="uppercase text-[10px] bg-white/20 px-1 rounded">{item.kind}</span>
           </div>
           <div className="flex gap-2 mt-2">
             <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center">

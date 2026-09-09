@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import type { MediaItem } from "@/lib/catalog";
 import { posterUrl } from "@/lib/catalog";
+import { fetchTmdbMeta } from "@/lib/tmdb";
 
 interface Props {
   focusedItem: MediaItem | null;
@@ -17,9 +18,13 @@ export function LiveWallpaper({ focusedItem }: Props) {
     if (timerRef.current) clearTimeout(timerRef.current);
 
     if (focusedItem) {
+      const item = focusedItem;
       timerRef.current = setTimeout(() => {
-        setBgImage(posterUrl(focusedItem.id));
-        setActive(true);
+        // Prefer a real TMDB backdrop; fall back to the archive thumb
+        fetchTmdbMeta(item).then((meta) => {
+          setBgImage(meta?.backdrop ?? posterUrl(item.id));
+          setActive(true);
+        });
       }, 200);
     } else {
       timerRef.current = setTimeout(() => {

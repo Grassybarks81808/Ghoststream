@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "GHOSTSTREAM — Free Movies, Zero Ads",
   description:
-    "Stream and download 110+ hand-curated public-domain classics. Horror, film noir, sci-fi, Keaton, Chaplin, cartoons and more — straight from the Internet Archive. Free forever, no ads, no accounts.",
+    "Stream and download 180+ hand-curated free classics — horror, film noir, sci-fi, Keaton, Chaplin, cartoons and modern Creative Commons films — straight from the Internet Archive. Free forever, no ads, no accounts.",
   applicationName: "Ghoststream",
   manifest: "/manifest.webmanifest",
   icons: {

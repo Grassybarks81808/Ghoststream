@@ -2,10 +2,11 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import type { MediaItem } from "@/lib/catalog";
-import { posterUrl, formatRuntime } from "@/lib/catalog";
+import { formatRuntime } from "@/lib/catalog";
 import { useProgress } from "@/lib/localStore";
 import { playNavSound, playHoverSound } from "@/lib/sounds";
 import { extractDominantColor } from "@/lib/colorExtract";
+import { useTmdbMeta, artFor } from "@/lib/tmdb";
 
 interface Props {
   title: string;
@@ -76,17 +77,17 @@ function MovieCard({
   const [imgFailed, setImgFailed] = useState(false);
   const colorExtracted = useRef(false);
   const prior = useProgress(item.id);
+  const meta = useTmdbMeta(item);
+  const art = artFor(item, meta);
   const progress =
     prior && prior.duration > 0 ? Math.min(100, (prior.position / prior.duration) * 100) : 0;
-
-  const poster = posterUrl(item.id);
 
   useEffect(() => {
     if (isFocused && !colorExtracted.current && !imgFailed) {
       colorExtracted.current = true;
-      extractDominantColor(poster).then(setGlowColor);
+      extractDominantColor(art.poster).then(setGlowColor);
     }
-  }, [isFocused, poster, imgFailed]);
+  }, [isFocused, art.poster, imgFailed]);
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);
@@ -101,7 +102,7 @@ function MovieCard({
 
   return (
     <div
-      className="gs-card gs-card-wide nav-focusable relative"
+      className="gs-card gs-card-poster nav-focusable relative"
       tabIndex={0}
       role="button"
       aria-label={`${item.title} (${item.year})`}
@@ -130,12 +131,13 @@ function MovieCard({
           : {}
       }
     >
-      <div className="relative aspect-video bg-[#1a1a1a] overflow-hidden rounded-t-xl">
+      <div className="relative aspect-[2/3] bg-[#1a1a1a] overflow-hidden rounded-t-xl">
         {!imgFailed ? (
           <img
-            src={poster}
+            key={art.poster}
+            src={art.poster}
             alt={item.title}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${art.posterIsTmdb ? "" : "object-top"}`}
             loading="lazy"
             onError={() => setImgFailed(true)}
           />
@@ -146,26 +148,32 @@ function MovieCard({
           </div>
         )}
 
+        {/* TMDB rating badge */}
+        {meta?.rating != null && (
+          <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/70 backdrop-blur-sm text-[11px] font-bold text-green-400 flex items-center gap-0.5">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            {meta.rating.toFixed(1)}
+          </div>
+        )}
+
         {/* hover overlay */}
         <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-3">
-          <h3 className="text-sm font-bold line-clamp-1">{item.title}</h3>
+          <h3 className="text-sm font-bold line-clamp-2">{item.title}</h3>
           <div className="flex items-center gap-2 text-xs text-gray-300 mt-0.5">
             <span>{item.year}</span>
             {item.runtime ? <span className="text-gray-600">·</span> : null}
             {item.runtime ? <span>{formatRuntime(item.runtime)}</span> : null}
-            <span className="text-gray-600">·</span>
-            <span className="uppercase text-[10px] tracking-wide bg-white/15 px-1.5 py-0.5 rounded">
-              {item.kind === "cartoon" ? "Cartoon" : "Movie"}
-            </span>
           </div>
           <div className="flex gap-2 mt-2 items-center">
-            <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
+            <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="#000">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
             </span>
             <span className="text-[10px] text-gray-400 line-clamp-1 flex-1">
-              Free · Public Domain · No Ads
+              Free · Public Domain
             </span>
           </div>
         </div>
@@ -173,10 +181,7 @@ function MovieCard({
         {/* watch progress bar */}
         {progress > 2 && (
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
-            <div
-              className="h-full bg-[#e50914]"
-              style={{ width: `${progress}%` }}
-            />
+            <div className="h-full bg-[#e50914]" style={{ width: `${progress}%` }} />
           </div>
         )}
       </div>

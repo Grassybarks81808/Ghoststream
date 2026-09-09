@@ -161,8 +161,11 @@ export default function Home() {
                     </a>{" "}
                     — public-domain films
                   </p>
-                  <p>⚖️ Every title in this library is in the public domain (US).</p>
+                  <p>⚖️ Every title is public domain (US) or Creative Commons licensed.</p>
                   <p>🍿 Made for movie nights. Press <kbd className="px-1 bg-white/10 rounded">/</kbd> to search.</p>
+                  <p className="mt-1">
+                    🎞️ This product uses the TMDB API but is not endorsed or certified by TMDB.
+                  </p>
                 </div>
               </div>
             </footer>

@@ -22,7 +22,8 @@ export type Genre =
   | "pioneers"
   | "hitchcock"
   | "adventure"
-  | "drama";
+  | "drama"
+  | "open";
 
 export interface MediaItem {
   /** archive.org identifier (verified) */
@@ -1533,6 +1534,413 @@ export const CATALOG: MediaItem[] = [
     genres: ["drama"],
     kind: "movie",
   },
+
+  // ─── NEW IN v2.1: more horror, noir, westerns, drama, Stooges,
+  // Keaton & Chaplin shorts, and Creative Commons open cinema ──────────
+
+  {
+    id: "TheScreamingSkull",
+    title: "The Screaming Skull",
+    year: 1958,
+    runtime: 68,
+    overview:
+      "A newlywed becomes convinced the skull of her husband's first wife is haunting their estate — and it might be. Atmosphere-drenched AIP Gothic horror.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "DeadMenWalk",
+    title: "Dead Men Walk",
+    year: 1943,
+    runtime: 64,
+    overview:
+      "George Zucco is twin brothers — one good, one an undead sorcerer rising from the grave for revenge. PRC poverty-row voodoo horror at its moody best.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "Scared_to_Death",
+    title: "Scared to Death",
+    year: 1943,
+    runtime: 62,
+    overview:
+      "Bela Lugosi in color! A woman recounts her own murder from the morgue in this strange noir-horror hybrid — the only color film Lugosi ever starred in.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "Bowery_at_Midnight",
+    title: "Bowery at Midnight",
+    year: 1942,
+    runtime: 62,
+    overview:
+      "Bela Lugosi runs a soup kitchen by day and a crime ring — and zombie dungeon — by night. Poverty-row horror-crime madness with a genuinely creepy climax.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "TheInvisibleGhost",
+    title: "The Invisible Ghost",
+    year: 1941,
+    runtime: 64,
+    overview:
+      "Bela Lugosi as a kindly doctor who unknowingly becomes a homicidal trance-killer when he glimpses his supposedly dead wife. Monogram minimalism.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "The_Monster_Maker",
+    title: "The Monster Maker",
+    year: 1944,
+    runtime: 64,
+    overview:
+      "A mad scientist injects a concert pianist with acromegaly serum to force his daughter's hand in marriage. Gloriously deranged cheapie with J. Carrol Naish.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "TheApe1940",
+    title: "The Ape",
+    year: 1940,
+    runtime: 62,
+    overview:
+      "Boris Karloff as a small-town doctor who dons an ape suit to harvest spinal fluid for a polio cure. It sounds insane because it is.",
+    genres: ["horror"],
+    kind: "movie",
+  },
+  {
+    id: "Man_Who_Cheated_Himself",
+    title: "The Man Who Cheated Himself",
+    year: 1951,
+    runtime: 81,
+    overview:
+      "A rich widow kills her husband and her detective lover covers it up — while his own brother investigates. San Francisco noir with a great airport chase finale.",
+    genres: ["noir"],
+    kind: "movie",
+  },
+  {
+    id: "Fear_in_the_Night",
+    title: "Fear in the Night",
+    year: 1947,
+    runtime: 70,
+    overview:
+      "A bank teller dreams he committed a murder — then finds the bullet hole in his mirror. A tidy little dream-logic noir from the writer of Invasion of the Body Snatchers.",
+    genres: ["noir"],
+    kind: "movie",
+  },
+  {
+    id: "Great_Flamarion_1945",
+    title: "The Great Flamarion",
+    year: 1945,
+    runtime: 77,
+    overview:
+      "A vaudeville marksman is played for a fool by his unfaithful assistant, and his perfect act becomes the perfect murder. Erich von Stroheim directs and stars.",
+    genres: ["noir"],
+    kind: "movie",
+  },
+  {
+    id: "railroaded1947_202003",
+    title: "Railroaded!",
+    year: 1947,
+    runtime: 73,
+    overview:
+      "A gangster's getaway driver is framed for murder and a beautiful hairstylist holds the proof. Early Anthony Mann, tough as rail steel.",
+    genres: ["noir"],
+    kind: "movie",
+  },
+  {
+    id: "Five_Minutes_To_Live.avi",
+    title: "Five Minutes to Live",
+    year: 1961,
+    runtime: 80,
+    overview:
+      "A hitman holds a banker's wife hostage while the clock runs out on a ransom plot — with Johnny Cash as the singing killer, guitar and all.",
+    genres: ["noir", "cult"],
+    kind: "movie",
+  },
+  {
+    id: "TheFastandtheFuriousJohnIreland1954goofyrip",
+    title: "The Fast and the Furious",
+    year: 1954,
+    runtime: 85,
+    overview:
+      "A fugitive escapes prison, wins a cross-country road race, and falls for the driver's daughter — the ORIGINAL Fast and the Furious, from 1954. Yes, that's why the modern franchise needed its title.",
+    genres: ["noir", "adventure"],
+    kind: "movie",
+  },
+  {
+    id: "FightingCaravans1931_368",
+    title: "Fighting Caravans",
+    year: 1931,
+    runtime: 92,
+    overview:
+      "A young scout leads a wagon train through hostile territory while dodging a crooked fur trader. Gary Cooper in early-talkie Technicolor-adjacent frontier spectacle.",
+    genres: ["western"],
+    kind: "movie",
+  },
+  {
+    id: "the_big_show",
+    title: "The Big Show",
+    year: 1936,
+    runtime: 73,
+    overview:
+      "A rodeo star loses his nerve, his horse and his girl, then wins them back at the big show. Gene Autry sings his way through circus-western mayhem.",
+    genres: ["western"],
+    kind: "movie",
+  },
+  {
+    id: "TheOvertheHillGang",
+    title: "The Over-the-Hill Gang",
+    year: 1969,
+    runtime: 74,
+    overview:
+      "Three retired Texas Rangers saddle up one last time to clean out the crooks running their friend's town. Grizzled, funny, and full of old-Hollywood faces.",
+    genres: ["western", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "meet_john_doe",
+    title: "Meet John Doe",
+    year: 1941,
+    runtime: 122,
+    overview:
+      "A reporter invents a suicidal everyman for a circulation stunt, a homeless ex-ballplayer plays the part — and a political machine tries to weaponize him. Frank Capra and Gary Cooper at their populist peak.",
+    genres: ["drama", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "disorder_in_the_court",
+    title: "Disorder in the Court",
+    year: 1936,
+    runtime: 17,
+    overview:
+      "The Stooges are star witnesses in a murder trial and proceed to destroy the entire courtroom. 'Take off your hat!' — Curly's finest 17 minutes.",
+    genres: ["comedy"],
+    kind: "movie",
+  },
+  {
+    id: "sing_a_song_of_six_pants",
+    title: "Sing a Song of Six Pants",
+    year: 1947,
+    runtime: 17,
+    overview:
+      "The Stooges run a tailor shop, hold a creditor's pants hostage, and catch a bank robber with a steam press. Soitenly essential.",
+    genres: ["comedy"],
+    kind: "movie",
+  },
+  {
+    id: "brideless_groom",
+    title: "Brideless Groom",
+    year: 1947,
+    runtime: 17,
+    overview:
+      "Shemp must marry within hours to inherit half a million dollars — and every ex-girlfriend wants to volunteer. Speed-dating, 1947 style.",
+    genres: ["comedy"],
+    kind: "movie",
+  },
+  {
+    id: "Cops1922",
+    title: "Cops",
+    year: 1922,
+    runtime: 18,
+    overview:
+      "Buster accidentally leads the ENTIRE police force on the most epic chase in silent comedy — hundreds of cops, one deadpan man, one doomed horse-drawn keg of nails.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "TheGoat",
+    title: "The Goat",
+    year: 1921,
+    runtime: 22,
+    overview:
+      "Buster is mistaken for the criminal 'Dead Shot Dan' and takes it from there — the train-track gag alone is worth the price of admission.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "ThePlayhouse",
+    title: "The Playhouse",
+    year: 1921,
+    runtime: 23,
+    overview:
+      "Keaton plays the audience, the orchestra, every performer and a minstrel-show MC in one legendary special-effects sequence — then wakes to a far more ordinary day.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "TheBoat",
+    title: "The Boat",
+    year: 1921,
+    runtime: 22,
+    overview:
+      "Buster builds the boat too big for the house, launches it, sinks it, and still saves the family. The Damfino at your service.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "TheBlacksmith",
+    title: "The Blacksmith",
+    year: 1922,
+    runtime: 21,
+    overview:
+      "Assistant blacksmith Buster wrecks a Rolls-Royce with progressively more creative tools. The anvil gag is canonical.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "ThePaleface",
+    title: "The Paleface",
+    year: 1922,
+    runtime: 20,
+    overview:
+      "Captured by Indians, Buster earns his life by extinguishing the chief's oil-well fire — the origin of the classic 'putting out fire with gasoline' bit.",
+    genres: ["silent", "western"],
+    kind: "movie",
+  },
+  {
+    id: "TheHauntedHouse1921",
+    title: "The Haunted House",
+    year: 1921,
+    runtime: 21,
+    overview:
+      "A bank teller stumbles into a haunted house that's actually a counterfeiter's front — with trapdoors, skeletons, and a stairway to nowhere. Perfect Halloween viewing.",
+    genres: ["silent", "horror"],
+    kind: "movie",
+  },
+  {
+    id: "Neighbors",
+    title: "Neighbors",
+    year: 1920,
+    runtime: 18,
+    overview:
+      "Two feuding families, two young lovers, and a fence between them — until Buster builds a human pyramid. Keaton's Romeo & Juliet in 18 minutes.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "HardLuck_201401",
+    title: "Hard Luck",
+    year: 1921,
+    runtime: 22,
+    overview:
+      "Down-on-his-luck Buster tries and fails at everything — ending with the famous (and famously impossible) fishing-pole dive. Keaton called it his proudest gag.",
+    genres: ["silent"],
+    kind: "movie",
+  },
+  {
+    id: "TheFrozenNorth1922",
+    title: "The Frozen North",
+    year: 1922,
+    runtime: 17,
+    overview:
+      "Keaton parodies Western melodramas and William S. Hart in the frozen Yukon, where he sees things that aren't there and robs the wrong saloon.",
+    genres: ["silent", "western"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1916_10_02_ThePawnshop",
+    title: "The Pawnshop",
+    year: 1916,
+    runtime: 24,
+    overview:
+      "Charlie the pawnshop clerk dissects a clock, devours a customer's soup, and defuses nitroglycerin with a mallet. Mutual-era Chaplin at top speed.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1916_09_04_TheCount",
+    title: "The Count",
+    year: 1916,
+    runtime: 23,
+    overview:
+      "A tailor's assistant crashes high society as 'Count Nobody' and out-dances the aristocracy into the fountain. Eric Campbell looms magnificently.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1916_05_15_TheFloorwalker",
+    title: "The Floorwalker",
+    year: 1916,
+    runtime: 25,
+    overview:
+      "Charlie's doppelgänger is embezzling from the department store — the first great escalator gag in film history.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1916_12_04_TheRink",
+    title: "The Rink",
+    year: 1916,
+    runtime: 24,
+    overview:
+      "Waiter by day, skating demon by night: Charlie turns a roller rink into a demolition derby and rescues the girl with a spinning entrance.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1916_08_07_One_A_M",
+    title: "One A.M.",
+    year: 1916,
+    runtime: 26,
+    overview:
+      "A drunk Chaplin battles his own house — the stairs, the tiger rug, the pendulum clock, the moving wall — in a nearly solo slapstick symphony.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1917_04_16_TheCure",
+    title: "The Cure",
+    year: 1917,
+    runtime: 24,
+    overview:
+      "Charlie checks into a dry-out spa with a trunk full of booze and accidentally cures everyone — of sobriety. The revolving-door gag is pure gold.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "CC_1915_10_04_CharlieShanghaied",
+    title: "Shanghaied",
+    year: 1915,
+    runtime: 26,
+    overview:
+      "Charlie is shanghaied aboard his own sweetheart's father's ship and mutinies with flour and crockery. Essanay-era chaos at sea.",
+    genres: ["silent", "comedy"],
+    kind: "movie",
+  },
+  {
+    id: "Sintel",
+    title: "Sintel",
+    year: 2010,
+    runtime: 15,
+    overview:
+      "A lone warrior crosses mountains and deserts searching for the dragon she raised from a hatchling. The Blender Foundation's epic fantasy short — 4K, gorgeous, and Creative Commons.",
+    genres: ["open", "adventure"],
+    kind: "cartoon",
+    note: "CC-BY · Blender Foundation",
+  },
+  {
+    id: "BigBuckBunny_328",
+    title: "Big Buck Bunny",
+    year: 2008,
+    runtime: 10,
+    overview:
+      "A big, gentle rabbit has had enough of three bullying rodents — and revenge has never been fluffier. The Blender Institute's beloved open-movie classic.",
+    genres: ["open", "cartoon"],
+    kind: "cartoon",
+    note: "CC-BY · Blender Foundation",
+  },
+  {
+    id: "ElephantsDream",
+    title: "Elephants Dream",
+    year: 2006,
+    runtime: 11,
+    overview:
+      "Two men navigate a surreal, ever-shifting machine world — the very first open movie ever made, and still one of the strangest. Creative Commons, in HD.",
+    genres: ["open", "scifi"],
+    kind: "cartoon",
+    note: "CC-BY · Blender Foundation",
+  },
 ];
 
 // ─── Helpers ────────────────────────────────────────────────────────────
@@ -1573,6 +1981,7 @@ export const ROWS: Row[] = [
   { id: "comedy", title: "🎩 Comedy & Musical", genre: "comedy" },
   { id: "silent", title: "🎬 Silent Masterpieces", genre: "silent" },
   { id: "cartoon", title: "🎨 Vintage Cartoons", genre: "cartoon" },
+  { id: "open", title: "✨ Open Cinema (Creative Commons)", genre: "open" },
   { id: "western", title: "🤠 Wild West", genre: "western" },
   { id: "cult", title: "🤪 So Bad, They're Good", genre: "cult" },
   { id: "hitchcock", title: "🎭 Hitchcock Classics", genre: "hitchcock" },

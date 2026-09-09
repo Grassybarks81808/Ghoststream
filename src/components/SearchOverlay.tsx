@@ -2,15 +2,19 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { MediaItem } from "@/lib/catalog";
-import { posterUrl, searchCatalog, ROWS } from "@/lib/catalog";
+import { searchCatalog, ROWS, formatRuntime } from "@/lib/catalog";
 import { playNavSound, playSelectSound, playBackSound } from "@/lib/sounds";
+import { useTmdbMeta, artFor } from "@/lib/tmdb";
 
 interface Props {
   onClose: () => void;
   onSelect: (item: MediaItem) => void;
 }
 
-const QUICK_LINKS = ["Horror", "Sci-Fi", "Comedy", "Cartoon", "Noir", "Western", "Keaton", "Chaplin", "Hitchcock"];
+const QUICK_LINKS = [
+  "Horror", "Sci-Fi", "Comedy", "Cartoon", "Noir", "Western",
+  "Keaton", "Chaplin", "Hitchcock", "Open Cinema", "Stooges",
+];
 
 export function SearchOverlay({ onClose, onSelect }: Props) {
   const [query, setQuery] = useState("");
@@ -34,7 +38,7 @@ export function SearchOverlay({ onClose, onSelect }: Props) {
     >
       {/* Search header */}
       <div className="sticky top-0 z-10 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 p-4">
-        <div className="max-w-5xl mx-auto flex items-center gap-4">
+        <div className="max-w-6xl mx-auto flex items-center gap-4">
           <button onClick={handleClose} className="nav-focusable p-2 rounded-lg hover:bg-white/10 transition" aria-label="Back">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="15 18 9 12 15 6" />
@@ -58,7 +62,7 @@ export function SearchOverlay({ onClose, onSelect }: Props) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${ROWS.length} collections — try "Keaton" or "1953"`}
+              placeholder="Search the collection — try “Keaton”, “1953” or “Lugosi”"
               className="gs-search w-full pl-12 pr-4 py-4 rounded-xl text-lg"
               onKeyDown={(e) => {
                 if (e.key === "Escape") handleClose();
@@ -102,44 +106,76 @@ export function SearchOverlay({ onClose, onSelect }: Props) {
           </div>
         )}
 
-        {/* Results grid */}
+        {/* Results grid — portrait poster cards */}
         {results.length > 0 && (
           <>
             <p className="text-sm text-gray-500 mb-4">
               {results.length} result{results.length === 1 ? "" : "s"}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
               {results.map((item) => (
-                <button
-                  key={item.id}
-                  className="gs-card gs-card-wide nav-focusable text-left"
-                  onClick={() => {
-                    playSelectSound();
-                    onSelect(item);
-                  }}
-                >
-                  <div className="relative aspect-video bg-[#1a1a1a] overflow-hidden rounded-t-xl">
-                    <img
-                      src={posterUrl(item.id)}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-3">
-                      <h3 className="text-sm font-bold line-clamp-1">{item.title}</h3>
-                      <div className="flex items-center gap-2 text-xs text-gray-300 mt-0.5">
-                        <span>{item.year}</span>
-                        <span className="text-gray-600">·</span>
-                        <span className="capitalize">{item.genres.find((g) => g !== "featured") || item.kind}</span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
+                <SearchCard key={item.id} item={item} onSelect={onSelect} />
               ))}
             </div>
           </>
         )}
       </div>
     </div>
+  );
+}
+
+function SearchCard({ item, onSelect }: { item: MediaItem; onSelect: (m: MediaItem) => void }) {
+  const meta = useTmdbMeta(item);
+  const art = artFor(item, meta);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  return (
+    <button
+      className="gs-card gs-card-poster gs-card-poster-grid nav-focusable text-left"
+      onClick={() => {
+        playSelectSound();
+        onSelect(item);
+      }}
+    >
+      <div className="relative aspect-[2/3] bg-[#1a1a1a] overflow-hidden rounded-t-xl">
+        {!imgFailed ? (
+          <img
+            key={art.poster}
+            src={art.poster}
+            alt={item.title}
+            className={`w-full h-full object-cover ${art.posterIsTmdb ? "gs-art-swap" : "object-top"}`}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 gap-2">
+            <span className="text-3xl">🎬</span>
+            <span className="text-xs text-center px-2 line-clamp-2">{item.title}</span>
+          </div>
+        )}
+
+        {meta?.rating != null && (
+          <span className="gs-rating">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            {meta.rating.toFixed(1)}
+          </span>
+        )}
+
+        <div className="card-info absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-2.5">
+          <h3 className="text-xs md:text-sm font-bold line-clamp-2">{item.title}</h3>
+          <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-gray-300 mt-0.5">
+            <span>{item.year}</span>
+            {item.runtime ? (
+              <>
+                <span className="text-gray-600">·</span>
+                <span>{formatRuntime(item.runtime)}</span>
+              </>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }
