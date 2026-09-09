@@ -1,12 +1,14 @@
-# ═══════════════════════════════════════════════════════════════════
-#  GHOSTSTREAM — local server (Windows)
+# ==============================================================
+#  GHOSTSTREAM - local server (Windows)
 #  A tiny zero-dependency web server that serves the Ghoststream
-#  static app from this folder. No Node.js, no installs required.
-# ═══════════════════════════════════════════════════════════════════
+#  static app from this folder. No Node.js, no installs needed.
+#  This file is intentionally pure ASCII so it parses correctly
+#  on every Windows system and language.
+# ==============================================================
 
 $ErrorActionPreference = 'SilentlyContinue'
 $port = 8420
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$root = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
 
 $mime = @{
   '.html'       = 'text/html; charset=utf-8'
@@ -45,7 +47,7 @@ try {
 } catch {
   Write-Host ""
   Write-Host "  Port $port is already in use." -ForegroundColor Red
-  Write-Host "  Ghoststream may already be running — check your browser tabs."
+  Write-Host "  Ghoststream may already be running - check your browser tabs."
   Write-Host ""
   Start-Process "http://localhost:$port/"
   exit

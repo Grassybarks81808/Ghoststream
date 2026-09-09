@@ -1,7 +1,7 @@
 name: Build & attach release assets
 
 # Builds the static app, packages the Windows portable zip, and attaches it
-# to the v2.0.0 release. Runs on every push to the working branch.
+# to the current release. Runs on every push to the working branch.
 on:
   push:
     branches:
@@ -11,6 +11,9 @@ on:
 
 permissions:
   contents: write
+
+env:
+  VERSION: v2.0.1
 
 jobs:
   build-and-attach:
@@ -31,18 +34,36 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Guard packaging files (ASCII + CRLF)
+        run: |
+          python3 - << 'PY'
+          import sys
+          for p in ["packaging/server.ps1", "packaging/Start-Ghoststream.bat", "packaging/README.txt"]:
+              raw = open(p, "rb").read()
+              raw.decode("ascii")  # raises on non-ASCII
+              assert b"\n" not in raw.replace(b"\r\n", b""), f"{p}: stray LF"
+              print("OK", p)
+          PY
+
       - name: Package Windows portable
         run: |
           mkdir -p pkg/Ghoststream
           cp -r out/* pkg/Ghoststream/
           cp packaging/server.ps1 packaging/Start-Ghoststream.bat packaging/README.txt pkg/Ghoststream/
           cd pkg
-          zip -r -q ../Ghoststream-v2.0.0-Windows-Portable.zip Ghoststream
+          zip -r -q ../Ghoststream-${{ env.VERSION }}-Windows-Portable.zip Ghoststream
           cd ..
-          unzip -l Ghoststream-v2.0.0-Windows-Portable.zip | tail -3
+          unzip -l Ghoststream-${{ env.VERSION }}-Windows-Portable.zip | tail -3
 
-      - name: Attach to v2.0.0 release
+      - name: Remove old asset if present
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete-asset "$VERSION" "Ghoststream-$VERSION-Windows-Portable.zip" \
+            -R "$GITHUB_REPOSITORY" -y || echo "no existing asset (fine)"
+
+      - name: Attach to ${{ env.VERSION }} release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.0
-          files: Ghoststream-v2.0.0-Windows-Portable.zip
+          tag_name: ${{ env.VERSION }}
+          files: Ghoststream-${{ env.VERSION }}-Windows-Portable.zip
