@@ -13,7 +13,6 @@ import { AmbientAudio } from "@/components/AmbientAudio";
 import { FloatingNav } from "@/components/FloatingNav";
 import { MyListSection } from "@/components/MyListSection";
 import { PWARegister } from "@/components/PWARegister";
-import { GhostLogo } from "@/components/GhostLogo";
 import type { TMDBMovie } from "@/lib/tmdb";
 
 interface RowData { id: string; title: string; category: string; items: TMDBMovie[]; mediaType?: string; }
@@ -62,5 +61,5 @@ export default function Home() {
       {activeFilter==="mylist"?<div className="pt-24"><MyListSection onSelect={setSelectedMovie} onFocus={handleFocus}/></div>:<>{heroMovie&&<HeroSection movie={heroMovie} onPlay={()=>released(heroMovie)&&handlePlay(heroMovie.id,heroMovie.media_type||"movie")} onDetails={()=>setSelectedMovie(heroMovie)}/>}<div className="relative z-10 -mt-20 pb-24">{loading&&<div className="px-6 space-y-8">{[1,2,3].map(i=><div key={i}><div className="skeleton h-7 w-48 mb-4"/><div className="flex gap-3 overflow-hidden">{[1,2,3,4,5,6].map(j=><div key={j} className="skeleton flex-shrink-0 w-44 h-64 rounded-lg"/>)}</div></div>)}</div>}{filtered.map((r,i)=><ContentRow key={r.id} title={r.title} items={r.items} delay={i*.08} onSelect={setSelectedMovie} onFocus={handleFocus}/>)}</div></>}</>}
     </div><FloatingNav onSearch={()=>setShowSearch(true)} onHome={home}/>
     {showSearch&&<SearchOverlay onClose={()=>setShowSearch(false)} onSelect={m=>{setSelectedMovie(m);setShowSearch(false)}} onPlay={(id,t)=>{handlePlay(id,t);setShowSearch(false)}}/>}
-    {selectedMovie&&<DetailModal movie={selectedMovie} onClose={()=>setSelectedMovie(null)} onPlay={handlePlay}/>} {playingMovie&&<PlayerOverlay tmdbId={playingMovie.tmdbId} type={playingMovie.type} season={playingMovie.season} episode={playingMovie.episode} onClose={()=>setPlayingMovie(null)}/>}</>;
+    {selectedMovie&&<DetailModal movie={selectedMovie} onClose={()=>setSelectedMovie(null)} onPlay={handlePlay}/>} {playingMovie&&<PlayerOverlay tmdb_id={playingMovie.tmdbId} type={playingMovie.type} season={playingMovie.season} episode={playingMovie.episode} onClose={()=>setPlayingMovie(null)}/>}</>;
 }
