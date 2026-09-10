@@ -5,7 +5,7 @@
  * - NEVER caches video streams (archive.org/download) — those are huge
  */
 
-const VERSION = "gs-v2.1.0";
+const VERSION = "gs-v2.2.0";
 const SHELL_CACHE = `${VERSION}-shell`;
 const THUMB_CACHE = `${VERSION}-thumbs`;
 const MAX_THUMBS = 400;

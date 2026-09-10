@@ -212,7 +212,7 @@ export function PlayerOverlay({ item, onClose }: Props) {
     >
       {/* Top bar */}
       <div
-        className={`absolute top-0 left-0 right-0 z-30 p-4 md:p-6 flex items-center gap-4 bg-gradient-to-b from-black/90 via-black/50 to-transparent transition-all duration-300 ${
+        className={`gs-safe-top-pad absolute top-0 left-0 right-0 z-30 p-4 md:p-6 flex items-center gap-4 bg-gradient-to-b from-black/90 via-black/50 to-transparent transition-all duration-300 ${
           showControls ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >

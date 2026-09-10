@@ -25,7 +25,7 @@ export function FloatingNav({ onSearch, onHome }: Props) {
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-[100] flex flex-col-reverse items-end gap-3 transition-all duration-300 ${
+      className={`gs-safe-bottom fixed bottom-6 right-6 z-[100] flex flex-col-reverse items-end gap-3 transition-all duration-300 ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}
     >

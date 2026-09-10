@@ -644,3 +644,21 @@ kbd {
 .gs-art-swap {
   animation: gsArtSwap 0.6s ease-out;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NATIVE APP / EDGE-TO-EDGE SAFE AREAS (Android APK + iPhone PWA)
+   Capacitor's SystemBars injects --safe-area-inset-* on <html>;
+   env() is the browser-native fallback.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.gs-nav {
+  padding-top: calc(16px + var(--safe-area-inset-top, env(safe-area-inset-top, 0px)));
+}
+
+.gs-safe-top-pad {
+  padding-top: calc(1rem + var(--safe-area-inset-top, env(safe-area-inset-top, 0px)));
+}
+
+.gs-safe-bottom {
+  bottom: calc(1.5rem + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+}

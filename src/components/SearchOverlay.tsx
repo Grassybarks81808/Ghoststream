@@ -37,7 +37,7 @@ export function SearchOverlay({ onClose, onSelect }: Props) {
       style={{ animation: "fadeInScale 0.3s ease-out" }}
     >
       {/* Search header */}
-      <div className="sticky top-0 z-10 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 p-4">
+      <div className="gs-safe-top-pad sticky top-0 z-10 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 p-4">
         <div className="max-w-6xl mx-auto flex items-center gap-4">
           <button onClick={handleClose} className="nav-focusable p-2 rounded-lg hover:bg-white/10 transition" aria-label="Back">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

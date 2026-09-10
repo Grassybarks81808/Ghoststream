@@ -1,7 +1,7 @@
 name: Build & attach release assets
 
-# Builds the static app, packages the Windows portable zip, and attaches it
-# to the current release. Runs on every push to the working branch.
+# Builds the static app, packages the Windows portable zip AND the signed
+# Android APK, and attaches both to the current release.
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: v2.1.0
+  VERSION: v2.2.0
 
 jobs:
   build-and-attach:
@@ -27,6 +27,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - name: Setup Java (Android build)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
 
       - name: Install dependencies
         run: npm ci
@@ -55,15 +62,30 @@ jobs:
           cd ..
           unzip -l Ghoststream-${{ env.VERSION }}-Windows-Portable.zip | tail -3
 
-      - name: Remove old asset if present
+      - name: Build signed Android APK (Capacitor)
+        run: |
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+          cp app/build/outputs/apk/release/app-release.apk \
+             ../Ghoststream-${{ env.VERSION }}-Android.apk
+          cd ..
+          ls -la Ghoststream-${{ env.VERSION }}-Android.apk
+
+      - name: Remove old assets if present
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete-asset "$VERSION" "Ghoststream-$VERSION-Windows-Portable.zip" \
-            -R "$GITHUB_REPOSITORY" -y || echo "no existing asset (fine)"
+            -R "$GITHUB_REPOSITORY" -y || echo "no existing zip asset (fine)"
+          gh release delete-asset "$VERSION" "Ghoststream-$VERSION-Android.apk" \
+            -R "$GITHUB_REPOSITORY" -y || echo "no existing apk asset (fine)"
 
       - name: Attach to ${{ env.VERSION }} release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
-          files: Ghoststream-${{ env.VERSION }}-Windows-Portable.zip
+          files: |
+            Ghoststream-${{ env.VERSION }}-Windows-Portable.zip
+            Ghoststream-${{ env.VERSION }}-Android.apk

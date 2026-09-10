@@ -27,9 +27,25 @@ Grab the **[Releases](../../releases)** page and download
 `Ghoststream-x.x.x-Windows-Portable.zip`. Extract it anywhere and double-click
 **`Start Ghoststream.bat`** — it ships with its own zero-dependency local server.
 
-### Android / iOS
+### Android (real APK — recommended)
 
-Ghoststream is an installable **PWA**. Host the build (or use any deployment of
+Grab `Ghoststream-x.x.x-Android.apk` from the
+**[Releases](../../releases)** page on your phone, tap it, and allow
+"Install unknown apps" when asked (it's a normal signed APK, ~2 MB). You get:
+
+- a real home-screen app with the ghost icon and splash screen,
+- hardware **back button** that behaves like a proper Android app,
+- downloads through Android's **Download Manager** (progress notification,
+  files land in your Downloads folder),
+- the full catalog bundled in the app — browsing works offline.
+
+No Play Store, no account, no permissions beyond internet. It's built from
+this exact source with [Capacitor](https://capacitorjs.com); the self-signed
+sideload key lives in `android/` so anyone can reproduce the build.
+
+### Android / iOS (PWA alternative)
+
+Ghoststream is also an installable **PWA**. Host the build (or use any deployment of
 it), open it in Chrome, and choose **Add to Home screen**. You get a
 full-screen app with an icon, offline browsing of the catalog, and one-tap
 playback.

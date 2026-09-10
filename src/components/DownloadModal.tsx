@@ -5,6 +5,7 @@ import type { MediaItem } from "@/lib/catalog";
 import { itemPageUrl } from "@/lib/catalog";
 import { fetchArchiveItem, formatBytes, type VideoOption } from "@/lib/archive";
 import { playSelectSound, playBackSound } from "@/lib/sounds";
+import { isNativeApp, nativeDownload } from "@/lib/native";
 import { GhostLogo, GhostLogoSad } from "./GhostLogo";
 
 interface Props {
@@ -32,6 +33,7 @@ export function DownloadModal({ item, onClose }: Props) {
   const [state, setState] = useState<DownloadState>({ received: 0, total: 0, speed: 0 });
   const [errorMsg, setErrorMsg] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
+  const [nativeMode, setNativeMode] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -168,7 +170,7 @@ export function DownloadModal({ item, onClose }: Props) {
               ))}
             </div>
 
-            {selected.size > 500 * 1024 * 1024 && (
+            {selected.size > 500 * 1024 * 1024 && !isNativeApp() && (
               <p className="text-xs text-yellow-500 mb-3">
                 Heads up: this file is large ({formatBytes(selected.size)}). It will be held in
                 memory while saving — if that worries you, use the direct link below.
@@ -242,12 +244,23 @@ export function DownloadModal({ item, onClose }: Props) {
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
               </svg>
             </div>
-            <p className="text-xl font-bold text-green-400 mb-2">Saved!</p>
+            <p className="text-xl font-bold text-green-400 mb-2">{nativeMode ? "Download started!" : "Saved!"}</p>
             <p className="text-sm text-gray-400 mb-1">
-              <span className="font-semibold text-gray-200">{item.title}</span> was sent to your downloads.
+              {nativeMode ? (
+                <>
+                  <span className="font-semibold text-gray-200">{item.title}</span> is downloading —
+                  check the notification shade. It will appear in your Downloads folder.
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold text-gray-200">{item.title}</span> was sent to your downloads.
+                </>
+              )}
             </p>
             <p className="text-xs text-gray-600 mb-6">
-              Public domain — keep it forever, share it anywhere. 🎁
+              {nativeMode
+                ? "You can close this screen or even the app — Android finishes the download. 📥"
+                : "Public domain — keep it forever, share it anywhere. 🎁"}
             </p>
             <button onClick={handleClose} className="gs-btn gs-btn-primary nav-focusable">
               Done

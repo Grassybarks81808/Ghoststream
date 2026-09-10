@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { StartupAnimation } from "@/components/StartupAnimation";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
@@ -16,6 +16,7 @@ import { PWARegister } from "@/components/PWARegister";
 import { GhostLogo } from "@/components/GhostLogo";
 import type { MediaItem } from "@/lib/catalog";
 import { ROWS, itemsForGenre, STATS } from "@/lib/catalog";
+import { isNativeApp, onNativeBackButton, nativeExitApp } from "@/lib/native";
 
 // Rows are pure static data — computed once, deterministically.
 const ALL_ROWS = ROWS.map((row) => ({ ...row, items: itemsForGenre(row.genre) })).filter(
