@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { playBackSound } from "@/lib/sounds";
 
 interface Props {
@@ -11,21 +11,43 @@ interface Props {
   onClose: () => void;
 }
 
+// Browser-side configuration must use the NEXT_PUBLIC_ prefix.
+const BASE_EMBED_URL =
+  process.env.NEXT_PUBLIC_BASE_EMBED_URL?.replace(/\/$/, "") || "";
+
+function buildEmbedUrl(
+  tmdbId: number,
+  type: string,
+  season?: number,
+  episode?: number
+): string | null {
+  if (!BASE_EMBED_URL || !Number.isFinite(tmdbId)) return null;
+
+  const id = encodeURIComponent(String(tmdbId));
+
+  if (type.toLowerCase() === "tv") {
+    if (season !== undefined && episode !== undefined) {
+      return `${BASE_EMBED_URL}/tv/${id}/${encodeURIComponent(String(season))}/${encodeURIComponent(String(episode))}`;
+    }
+    return `${BASE_EMBED_URL}/tv/${id}`;
+  }
+
+  return `${BASE_EMBED_URL}/movie/${id}`;
+}
+
 export function PlayerOverlay({ tmdbId, type, season, episode, onClose }: Props) {
   const [closing, setClosing] = useState(false);
   const [showControls, setShowControls] = useState(true);
 
-  let streamUrl: string;
-  if (type === "tv" && season !== undefined && episode !== undefined) {
-    streamUrl = `https://vidsrc-embed.ru/embed/tv/${tmdbId}/${season}/${episode}`;
-  } else {
-    streamUrl = `https://vidsrc-embed.ru/embed/movie/${tmdbId}`;
-  }
+  const embedUrl = useMemo(
+    () => buildEmbedUrl(tmdbId, type, season, episode),
+    [tmdbId, type, season, episode]
+  );
 
   const handleClose = useCallback(() => {
     playBackSound();
     setClosing(true);
-    setTimeout(onClose, 400);
+    window.setTimeout(onClose, 400);
   }, [onClose]);
 
   useEffect(() => {
@@ -40,7 +62,6 @@ export function PlayerOverlay({ tmdbId, type, season, episode, onClose }: Props)
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose]);
 
-  // Auto-hide controls
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     const handler = () => {
@@ -58,11 +79,11 @@ export function PlayerOverlay({ tmdbId, type, season, episode, onClose }: Props)
 
   return (
     <div className={`player-overlay ${closing ? "closing" : ""}`}>
-      {/* Back button */}
       <div
         className={`absolute top-0 left-0 right-0 z-50 p-4 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${showControls ? "opacity-100" : "opacity-0"}`}
       >
         <button
+          type="button"
           onClick={handleClose}
           className="nav-focusable flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
         >
@@ -78,14 +99,26 @@ export function PlayerOverlay({ tmdbId, type, season, episode, onClose }: Props)
         )}
       </div>
 
-      {/* Video iframe */}
-      <iframe
-        src={streamUrl}
-        className="w-full h-full border-0"
-        allowFullScreen
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        title="Stream"
-      />
+      <div className="relative h-full w-full flex items-center justify-center bg-black">
+        {embedUrl ? (
+          <iframe
+            key={embedUrl}
+            src={embedUrl}
+            className="absolute inset-0 h-full w-full border-0"
+            allowFullScreen
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            referrerPolicy="strict-origin-when-cross-origin"
+            title="Ghoststream player"
+          />
+        ) : (
+          <div className="px-6 text-center text-white">
+            <h2 className="text-lg font-bold">Playback provider not configured</h2>
+            <p className="mt-2 text-sm text-gray-400">
+              Set NEXT_PUBLIC_BASE_EMBED_URL in your local environment and restart the app.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
